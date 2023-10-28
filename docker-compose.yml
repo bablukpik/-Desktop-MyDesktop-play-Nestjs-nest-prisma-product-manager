@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  nest-app:
+    build: . # Dockerfile's path
+    container_name: nest-app
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - 8000:8000
+    networks:
+      - volksbyte
+    volumes:
+      - ./:/app
+    env_file:
+      - .env
+
+  # Docker connection string would be: postgres://postgres:postgres@localhost:5432/
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - volksbyte
+
+volumes:
+  postgres_data:
+
+networks:
+  volksbyte:
+    name: volksbyte

@@ -36,3 +36,5 @@ lerna-debug.log*
 
 .http
 .rest
+.env
+.env-*

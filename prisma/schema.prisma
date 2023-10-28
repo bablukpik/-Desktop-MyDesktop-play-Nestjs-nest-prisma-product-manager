@@ -1,0 +1,46 @@
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id                Int                 @id @default(autoincrement())
+  parent_id         Int?
+  name              String
+  image             String
+  price             Int
+  created_at        DateTime            @default(now())
+  updated_at        DateTime            @updatedAt
+  ProductPrice      ProductPrice[]
+  ProductToCategory ProductToCategory[]
+}
+
+model ProductPrice {
+  price_id         Int     @id @default(autoincrement())
+  product_id       Int
+  product_quantity Int
+  price            Int
+  Product          Product @relation(fields: [product_id], references: [id])
+}
+
+model Category {
+  id         Int                 @id @default(autoincrement())
+  name       String
+  created_at DateTime            @default(now())
+  updated_at DateTime            @updatedAt
+  products   ProductToCategory[]
+}
+
+model ProductToCategory {
+  id          Int      @id @default(autoincrement())
+  product_id  Int
+  category_id Int
+  Product     Product  @relation(fields: [product_id], references: [id])
+  Category    Category @relation(fields: [category_id], references: [id])
+}
