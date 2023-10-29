@@ -11,7 +11,7 @@ async function bootstrap() {
     .setTitle('Product Data Importer')
     .setDescription('The NestJS Prisma Product Manager')
     .setVersion('1.0')
-    .addTag('products')
+    // .addTag('products')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
@@ -20,7 +20,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = configService.get('APP_PORT');
 
-  await app.listen(port || 3000);
+  await app.listen(port || 8000);
   console.info(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
