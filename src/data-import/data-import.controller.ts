@@ -1,13 +1,16 @@
-import { Controller, Post } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { DataImportService } from './data-import.service';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('data-import')
+@ApiTags('data-import')
 export class DataImportController {
   constructor(private dataImportService: DataImportService) {}
 
-  @Post()
+  @Get()
   async initiateImport() {
-    await this.dataImportService.importData();
-    return { message: 'Data import initiated' };
+    const data = await this.dataImportService.importData();
+    // return { message: 'Data import initiated' };
+    return data;
   }
 }
