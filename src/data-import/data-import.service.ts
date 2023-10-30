@@ -1,22 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import productsJson from '../../products.json';
-
-interface ProductData {
-  products: {
-    // Define the structure of the products property here
-  }[];
-}
+import { FileReaderProvider } from './file-reader.provider';
 
 @Injectable()
 export class DataImportService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private fileReaderProvider: FileReaderProvider,
+  ) {}
 
   async importData() {
-    const productData: ProductData = productsJson as ProductData;
-    for (const product of productData.products) {
-      return product;
-      // logic to be implemented
+    // Use the FileReaderProvider to read the JSON file
+    const jsonData = await this.fileReaderProvider.readJSONFile('your-json-file.json');
+
+    for (const product of jsonData.products) {
+      // Implement your logic to transform and insert data into the database using Prisma
+      // You can use Prisma to create records in the Product, ProductPrice, Category, and ProductToCategory tables.
+      await this.createProduct(product);
     }
+  }
+
+  async createProduct(product: any) {
+    // Implement your logic to create a product using Prisma
+    // Example: await this.prisma.product.create({ data: product });
   }
 }
