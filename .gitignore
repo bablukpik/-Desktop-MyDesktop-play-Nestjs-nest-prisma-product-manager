@@ -38,3 +38,7 @@ lerna-debug.log*
 .rest
 .env
 .env-*
+
+# misc
+.gitignore
+products.json
