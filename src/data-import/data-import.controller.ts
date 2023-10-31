@@ -1,6 +1,8 @@
+import { join } from 'path';
 import { Controller, Get } from '@nestjs/common';
-import { DataImportService } from './data-import.service';
 import { ApiTags } from '@nestjs/swagger';
+import { DataImportService } from './data-import.service';
+import { DATA_SOURCE_FILE } from '../constants/common';
 
 @Controller('data-import')
 @ApiTags('data-import')
@@ -9,7 +11,8 @@ export class DataImportController {
 
   @Get()
   async initiateImport() {
-    const data = await this.dataImportService.importData();
+    const jsonFilePath = join(process.cwd(), DATA_SOURCE_FILE);
+    const data = await this.dataImportService.importData(jsonFilePath);
     // return { message: 'Data import initiated' };
     return data;
   }
