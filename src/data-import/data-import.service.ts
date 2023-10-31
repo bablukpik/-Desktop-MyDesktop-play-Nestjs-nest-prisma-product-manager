@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FileReaderProvider } from './file-reader.provider';
+import { join } from 'path';
+
+const PRODUCTS_JSON = 'products.json';
 
 @Injectable()
 export class DataImportService {
@@ -10,10 +13,8 @@ export class DataImportService {
   ) {}
 
   async importData() {
-    // Use the FileReaderProvider to read the JSON file
-    const jsonData = await this.fileReaderProvider.readJSONFile(
-      '../../products.json',
-    );
+    const jsonFilePath = join(process.cwd(), PRODUCTS_JSON);
+    const jsonData = await this.fileReaderProvider.readJSONFile(jsonFilePath);
 
     // for (const product of jsonData.products) {
     //   // Implement your logic to transform and insert data into the database using Prisma
