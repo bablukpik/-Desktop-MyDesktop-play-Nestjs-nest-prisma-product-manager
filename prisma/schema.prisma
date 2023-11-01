@@ -14,7 +14,7 @@ model Product {
   parent_id         Int?
   name              String
   image             String
-  price             Int
+  // price             Int
   created_at        DateTime            @default(now())
   updated_at        DateTime            @updatedAt
   ProductPrice      ProductPrice[]
@@ -25,7 +25,7 @@ model ProductPrice {
   price_id         Int     @id @default(autoincrement())
   product_id       Int
   product_quantity Int
-  price            Int
+  price            Int?
   Product          Product @relation(fields: [product_id], references: [id])
 }
 

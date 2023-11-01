@@ -12,6 +12,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "migrate:dev": "DATABASE_URL='postgresql://postgres:postgres@localhost:5432/product_manager_db?schema=public' npx prisma migrate dev",
     "studio": "DATABASE_URL='postgresql://postgres:postgres@localhost:5432/product_manager_db?schema=public' npx prisma studio",
     "import-data": "DATABASE_URL='postgresql://postgres:postgres@localhost:5432/product_manager_db?schema=public' npx ts-node data-import.cli.ts",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
