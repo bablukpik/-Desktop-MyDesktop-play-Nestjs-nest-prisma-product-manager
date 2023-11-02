@@ -30,35 +30,31 @@ export class DataImportService {
       const product = {
         name: productData.name,
         image: productData.product_group_image,
+        ProductPrice: {
+          create: [],
+        },
+        ProductToCategory: {
+          create: productData.categories.map((category) => ({
+            Category: {
+              create: {
+                name: category.name,
+              },
+            },
+          })),
+        },
       };
-
-      const productPrices = [];
 
       for (const productVariant of productData.product_variants) {
         for (const quantity of productVariant.quantities) {
-          productPrices.push({
+          product.ProductPrice.create.push({
             price: quantity?.Standard_price ?? 0,
             product_quantity: quantity?.quantity ?? 0,
           });
         }
       }
 
-      // const categories = productData.categories.map((category) => {
-      //   return {
-      //     name: category.name,
-      //   };
-      // });
-
       const createdProduct = await this.prisma.product.create({
-        data: {
-          ...product,
-          ProductPrice: {
-            create: productPrices,
-          },
-          // categories: {
-          //         create: categories,
-          //       },
-        },
+        data: product,
       });
 
       console.log('Product created:', createdProduct);
@@ -67,3 +63,36 @@ export class DataImportService {
     }
   }
 }
+
+// async finallyImportToDB(productData: ProductDto) {
+//   try {
+//     const product = {
+//       name: productData.name,
+//       image: productData.product_group_image,
+//     };
+
+//     const productPrices = [];
+
+//     for (const productVariant of productData.product_variants) {
+//       for (const quantity of productVariant.quantities) {
+//         productPrices.push({
+//           price: quantity?.Standard_price ?? 0,
+//           product_quantity: quantity?.quantity ?? 0,
+//         });
+//       }
+//     }
+
+//     const createdProduct = await this.prisma.product.create({
+//       data: {
+//         ...product,
+//         ProductPrice: {
+//           create: productPrices,
+//         },
+//       },
+//     });
+
+//     console.log('Product created:', createdProduct);
+//   } catch (error) {
+//     console.error('Error importing data:', error);
+//   }
+// }

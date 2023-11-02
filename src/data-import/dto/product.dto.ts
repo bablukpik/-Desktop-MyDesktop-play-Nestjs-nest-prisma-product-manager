@@ -8,6 +8,7 @@ export class ProductDto {
   description_html: string;
   product_group_image: string;
   product_variants: ProductVariantDto[];
+  categories: CategoryDto[];
 }
 
 export class ProductVariantDto {
@@ -55,4 +56,9 @@ export class ProductAttributeDto {
   attribute_name: string;
   attribute_value_id: string;
   attribute_value: string;
+}
+
+export class CategoryDto {
+  id: number;
+  name: string;
 }
