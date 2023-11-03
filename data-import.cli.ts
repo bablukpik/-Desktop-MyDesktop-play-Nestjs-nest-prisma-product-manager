@@ -4,11 +4,13 @@ import { AppModule } from './src/app.module';
 import { DataImportService } from './src/data-import/data-import.service';
 import { DATA_SOURCE_FILE } from './src/constants/common';
 
+const jsonFilePath = join(process.cwd(), DATA_SOURCE_FILE);
+
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule);
   const dataImportService = app.get(DataImportService);
-  const jsonFilePath = join(process.cwd(), DATA_SOURCE_FILE);
-  await dataImportService.importData(jsonFilePath);
+  const response = await dataImportService.importData(jsonFilePath);
+  console.log('response', response);
   await app.close();
 }
 

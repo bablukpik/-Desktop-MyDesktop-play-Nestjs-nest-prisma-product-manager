@@ -1,7 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { FileReaderProvider } from './file-reader.provider';
 import { ProductDto } from './dto/product.dto';
+import { Product } from '@prisma/client';
 
 @Injectable()
 export class DataImportService {
@@ -10,18 +16,25 @@ export class DataImportService {
     private fileReaderProvider: FileReaderProvider,
   ) {}
 
-  async importData(filePath: string): Promise<void> {
+  async importData(filePath: string): Promise<{
+    message: string;
+    success: boolean;
+    status: HttpStatus;
+    data: Product;
+  }> {
     try {
       // Read the JSON data from the file using the FileReaderProvider
       const productData = await this.fileReaderProvider.readJSONFile(filePath);
 
       if (productData) {
-        await this.finallyImportToDB(productData);
+        return this.finallyImportToDB(productData);
       } else {
-        console.error('Invalid JSON data format.');
+        throw new BadRequestException('Invalid JSON data format');
       }
     } catch (error) {
-      console.error('Error importing data:', error);
+      throw new InternalServerErrorException(
+        `Error importing data: ${error.toString()}`,
+      );
     }
   }
 
@@ -57,42 +70,16 @@ export class DataImportService {
         data: product,
       });
 
-      console.log('Product created:', createdProduct);
+      return {
+        message: 'Product created successfully',
+        success: true,
+        status: HttpStatus.CREATED,
+        data: createdProduct,
+      };
     } catch (error) {
-      console.error('Error importing data:', error);
+      throw new InternalServerErrorException(
+        `Error creating product: ${error.toString()}`,
+      );
     }
   }
 }
-
-// async finallyImportToDB(productData: ProductDto) {
-//   try {
-//     const product = {
-//       name: productData.name,
-//       image: productData.product_group_image,
-//     };
-
-//     const productPrices = [];
-
-//     for (const productVariant of productData.product_variants) {
-//       for (const quantity of productVariant.quantities) {
-//         productPrices.push({
-//           price: quantity?.Standard_price ?? 0,
-//           product_quantity: quantity?.quantity ?? 0,
-//         });
-//       }
-//     }
-
-//     const createdProduct = await this.prisma.product.create({
-//       data: {
-//         ...product,
-//         ProductPrice: {
-//           create: productPrices,
-//         },
-//       },
-//     });
-
-//     console.log('Product created:', createdProduct);
-//   } catch (error) {
-//     console.error('Error importing data:', error);
-//   }
-// }

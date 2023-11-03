@@ -1,6 +1,6 @@
 # Product Data Importer
 
-This is a backend repository for the Product Data Importer app using NestJS, PostgreSQL, Prisma and Docker and so on.
+This is a backend repository for the Product Data Importer app using NestJS, PostgreSQL, Prisma, Docker and so on.
 
 ## Run the App using Docker
 
@@ -19,8 +19,8 @@ This is a backend repository for the Product Data Importer app using NestJS, Pos
 
 To import product data you'll need to follow the steps below:
 
-- First put the `products.json` file in the root of the project
-- Now you have to options to perform ETL (Extract, Transform, and Load):
+- First put the `products.json` file at the root of the project directory
+- Now you have two options to perform ETL (Extract, Transform, and Load Data):
 
   1. You can perform ETL using this npm script command from your terminal:
 
