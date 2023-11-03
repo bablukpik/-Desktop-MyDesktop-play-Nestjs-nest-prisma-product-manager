@@ -13,7 +13,6 @@ export class DataImportController {
   async initiateImport() {
     const jsonFilePath = join(process.cwd(), DATA_SOURCE_FILE);
     const data = await this.dataImportService.importData(jsonFilePath);
-    // return { message: 'Data import initiated' };
     return data;
   }
 }
