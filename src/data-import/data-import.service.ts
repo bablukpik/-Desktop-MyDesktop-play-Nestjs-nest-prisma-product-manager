@@ -8,6 +8,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { FileReaderProvider } from './file-reader.provider';
 import { ProductDto } from './dto/product.dto';
 import { Product } from '@prisma/client';
+import { PaginationQueryDto } from './dto/pagination-query.dto';
 
 @Injectable()
 export class DataImportService {
@@ -71,7 +72,7 @@ export class DataImportService {
       });
 
       return {
-        message: 'Product created successfully',
+        message: 'Data imported successfully',
         success: true,
         status: HttpStatus.CREATED,
         data: createdProduct,
@@ -81,5 +82,43 @@ export class DataImportService {
         `Error creating product: ${error.toString()}`,
       );
     }
+  }
+
+  async findAllProducts() {
+    return this.prisma.product.findMany({
+      select: {
+        id: true,
+        parent_id: true,
+        name: true,
+        image: true,
+      },
+    });
+  }
+
+  async findAllCategories() {
+    return this.prisma.category.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+  }
+
+  async findAllPrices(query: PaginationQueryDto) {
+    const page = +query?.page || 1;
+    const perPage = +query?.perPage || 10;
+
+    const skip = (page - 1) * perPage;
+
+    return this.prisma.productPrice.findMany({
+      skip,
+      take: perPage,
+      select: {
+        price_id: true,
+        price: true,
+        product_id: true,
+        product_quantity: true,
+      },
+    });
   }
 }
